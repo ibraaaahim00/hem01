@@ -81,7 +81,18 @@
         .content {
             padding: 25px;
         }
+        .logout-btn {
+            background: #ef4444;
+            color: #fff;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
 
+        .logout-btn:hover {
+            background: #dc2626;
+        }
         /* Cards */
         .cards {
             display: grid;
@@ -289,7 +300,20 @@
 
     <div class="topbar">
         <h3>Admin Panel</h3>
-        <span>Welcome 👋</span>
+
+        <div style="display:flex; align-items:center; gap:15px;">
+
+            <span>Welcome 👋</span>
+
+            <!-- 🔴 Logout -->
+            <form action="{{ route('admin.logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="logout-btn">
+                    Logout
+                </button>
+            </form>
+
+        </div>
     </div>
 
     <div class="content">

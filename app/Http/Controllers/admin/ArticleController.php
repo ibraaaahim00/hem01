@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Models\Article;
 use Illuminate\Http\Request;
+use App\Models\Comments;
 
 class ArticleController extends Controller
 {
@@ -22,10 +23,10 @@ class ArticleController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => ['required','string','max:255'],
+        $request->validate([    'title' => ['required','string','max:255'],
             'date' => ['required','date'],
             'content'=> ['required','string'],
+
         ]);
         Article::create([
             'title' => $request->title,
@@ -45,10 +46,10 @@ class ArticleController extends Controller
 
     public function update(Request $request, Article $article)
     {
-        $request->validate([
-            'title' => ['required','string','max:255'],
+        $request->validate([    'title' => ['required','string','max:255'],
             'date' => ['required','date'],
             'content'=> ['required','string'],
+
         ]);
 
         $article->update([
@@ -64,5 +65,31 @@ class ArticleController extends Controller
     {
         $article->delete();
         return redirect('/admin/articles');
+    }
+
+    public function clientindex()
+    {
+        $articles =Article::latest()->get();
+        return view('client.index', compact('articles'));
+    }
+
+    public function show($id)
+    {
+        $article=Article::with('comments')->findOrFail($id);
+
+        return view('client.articles.show', compact('article'));
+    }
+
+    public function addcomment(Request $request, $id)
+    {
+        $request->validate([
+            'comment' => ['required','string'],
+        ]);
+        Comments::create([
+            'comment' => $request->comment,
+            'article_id' => $id,
+            'name' => $request->name,
+        ]);
+        return back();
     }
 }
